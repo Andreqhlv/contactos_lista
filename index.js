@@ -13,7 +13,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-
 // Obtener todos los contactos
 app.get('/contactos', async (req, res) => {
   try {
@@ -52,8 +51,13 @@ app.delete('/contactos/:id', async (req, res) => {
   }
 });
 
+// 👉 Ruta raíz para verificar funcionamiento
+app.get('/', (req, res) => {
+  res.send('🚀 API de Contactos funcionando en Render');
+});
+
 // Iniciar servidor
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`API corriendo en http://localhost:${PORT}`);
 });
