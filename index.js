@@ -1,7 +1,9 @@
 const express = require('express');
+const cors = require('cors'); // ✅ Importar cors
 const { Pool } = require('pg');
 const app = express();
 
+app.use(cors()); // ✅ Permitir CORS
 app.use(express.json());
 
 const pool = new Pool({
@@ -13,7 +15,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Obtener todos los contactos
+// Rutas
 app.get('/contactos', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM contactos ORDER BY id');
@@ -24,7 +26,6 @@ app.get('/contactos', async (req, res) => {
   }
 });
 
-// Agregar un contacto
 app.post('/contactos', async (req, res) => {
   const { nombre, telefono } = req.body;
   try {
@@ -39,7 +40,6 @@ app.post('/contactos', async (req, res) => {
   }
 });
 
-// Eliminar un contacto
 app.delete('/contactos/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -51,12 +51,10 @@ app.delete('/contactos/:id', async (req, res) => {
   }
 });
 
-// 👉 Ruta raíz para verificar funcionamiento
 app.get('/', (req, res) => {
   res.send('🚀 API de Contactos funcionando en Render');
 });
 
-// Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`API corriendo en http://localhost:${PORT}`);
