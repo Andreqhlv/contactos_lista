@@ -1,9 +1,9 @@
 const express = require('express');
-const cors = require('cors'); // ✅ Importar cors
+const cors = require('cors'); // importar cors
 const { Pool } = require('pg');
 const app = express();
 
-app.use(cors()); // ✅ Permitir CORS
+app.use(cors()); // permitir CORS
 app.use(express.json());
 
 const pool = new Pool({
@@ -40,6 +40,30 @@ app.post('/contactos', async (req, res) => {
   }
 });
 
+// Actualizar un contacto existente
+app.put('/contactos/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nombre, telefono } = req.body;
+
+  try {
+    const result = await pool.query(
+      'UPDATE contactos SET nombre = $1, telefono = $2 WHERE id = $3 RETURNING *',
+      [nombre, telefono, id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Contacto no encontrado' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar contacto' });
+  }
+});
+
+
+
 app.delete('/contactos/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -58,4 +82,5 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`API corriendo en http://localhost:${PORT}`);
+
 });
