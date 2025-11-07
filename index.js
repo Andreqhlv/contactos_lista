@@ -76,7 +76,7 @@ app.delete('/contactos/:id', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('🚀 API de Contactos funcionando en Render');
+  res.send('API de Contactos funcionando en Render');
 });
 
 const PORT = process.env.PORT || 3000;
@@ -84,3 +84,4 @@ app.listen(PORT, () => {
   console.log(`API corriendo en http://localhost:${PORT}`);
 
 });
+
